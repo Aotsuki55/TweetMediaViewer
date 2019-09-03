@@ -58,7 +58,7 @@
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
-    "@commitlint/cli": "^8.0.0",
+    "@commitlint/cli": "^8.1.0",
     "@commitlint/config-conventional": "^8.0.0",
     "babel-plugin-istanbul": "^5.1.4",
     "chai": "^4.2.0",
@@ -107,7 +107,7 @@
       "@commitlint/config-conventional"
     ]
   },
-  "husky": {
+  "//": {
     "hooks": {
       "pre-commit": "lint-staged",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"

@@ -16,4 +16,5 @@
 // });
 
 Route::get('/view', 'PagesController@getViewer');
-
+Route::post('/view/status', 'PagesController@saveTmp');
+Route::get('/view/find', 'PagesController@search');

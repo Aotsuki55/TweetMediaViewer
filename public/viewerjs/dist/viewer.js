@@ -924,7 +924,7 @@
     render: function render() {
       this.initContainer();
       this.initViewer();
-      this.initList();
+      if(this.initFlag==false)this.initList();
       this.renderViewer();
     },
     initContainer: function initContainer() {
@@ -968,7 +968,9 @@
         var src = image.src;
         var alt = escapeHTMLEntities(image.alt || getImageNameFromURL(src));
         var url = options.url;
-
+        var id = image.getAttribute("data-id");
+        var status = image.getAttribute("data-status");
+        var style = image.style.borderColor;
         if (isString(url)) {
           url = image.getAttribute(url);
         } else if (isFunction(url)) {
@@ -980,6 +982,11 @@
           var img = document.createElement('img');
           img.src = src || url;
           img.alt = alt;
+          img.style.borderStyle = "solid";
+          img.style.borderWidth = "4px";
+          img.style.borderColor = style;
+          img.setAttribute('data-id', id);
+          img.setAttribute('data-status', status);
           img.setAttribute('data-index', index);
           img.setAttribute('data-original-url', url || src);
           img.setAttribute('data-viewer-action', 'view');
@@ -1016,6 +1023,7 @@
           once: true
         });
       }
+      this.initFlag = true;
     },
     renderList: function renderList(index) {
       var i = index || this.index;
@@ -1308,8 +1316,8 @@
       if (options.loading) {
         removeClass(this.canvas, CLASS_LOADING);
       }
-
-      image.style.cssText = 'height:0;' + "margin-left:".concat(viewerData.width / 2, "px;") + "margin-top:".concat(viewerData.height / 2, "px;") + 'max-width:none!important;' + 'position:absolute;' + 'width:0;';
+      //////////////
+      image.style.cssText += 'height:0;' + "margin-left:".concat(viewerData.width / 2, "px;") + "margin-top:".concat(viewerData.height / 2, "px;") + 'max-width:none!important;' + 'position:absolute;' + 'width:0;';
       this.initImage(function () {
         toggleClass(image, CLASS_MOVE, options.movable);
         toggleClass(image, CLASS_TRANSITION, options.transition);
@@ -1798,11 +1806,20 @@
       var item = this.items[index];
       var img = item.querySelector('img');
       var url = getData(img, 'originalUrl');
+      var id = getData(img, 'id');
+      var idx = getData(img, 'index');
+      var status = getData(img, 'status');
       var alt = escapeHTMLEntities(img.getAttribute('alt'));
       var image = document.createElement('img');
       image.src = url;
       image.alt = alt;
-
+      image.id = "viewer";
+      image.style.borderStyle = img.style.borderStyle;
+      image.style.borderWidth = img.style.borderWidth;
+      image.style.borderColor = img.style.borderColor;
+      image.setAttribute('data-id', id);
+      image.setAttribute('data-idx', idx);
+      image.setAttribute('data-status', status);
       if (isFunction(options.view)) {
         addListener(element, EVENT_VIEW, options.view, {
           once: true
@@ -2755,6 +2772,7 @@
       this.viewing = false;
       this.wheeling = false;
       this.zooming = false;
+      this.initFlag = false;
       this.init();
     }
 

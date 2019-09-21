@@ -44,9 +44,6 @@
           <img src="{{ asset( $media->path ) }}" alt="{{$media->filename}}" data-id="{{$media->media_id_str}}" data-status="{{$media->status}}" width="300" height=auto style="border-style: solid; border-width: 4px ; border-color: {{ $media->status==null || $media->status==0 ? 'transparent' : $statusToColor[$media->status]}};">
         </li>
       @endforeach
-          <!-- <li class="grid__item"><img src="http://placehold.jp/300x300.png" alt="" width="300" height="300"></li>
-          <li class="grid__item"><img src="http://placehold.jp/300x320.png" alt="" width="300" height="320"></li>
-          <li class="grid__item"><img src="http://placehold.jp/300x360.png" alt="" width="300" height="360"></li> -->
     </ul>
     <div class="text-center">
       {{ $medias->appends(request()->query())->links() }}

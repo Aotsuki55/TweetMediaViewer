@@ -27,7 +27,7 @@ class PagesController extends Controller
       foreach($medias as $media){
         $media->path = '/twitter/' . $media->user_id_str . '/' . $media->filename;
       }
-      return view('viewerY', [
+      return view('viewer', [
         'medias' => $medias,
         'statusToColor' => PagesController::$statusToColor,
         'request' => null
@@ -95,7 +95,7 @@ class PagesController extends Controller
         $media->path = '/twitter/' . $media->user_id_str . '/' . $media->filename;
       }
       \Debugbar::addMessage($medias);
-      return view('viewerY', [
+      return view('viewer', [
         'medias' => $medias,
         'statusToColor' => PagesController::$statusToColor,
         'request' => $request

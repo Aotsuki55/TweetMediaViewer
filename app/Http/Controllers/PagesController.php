@@ -88,7 +88,8 @@ class PagesController extends Controller
                 $column = "status";
                 $typeFlag = 0;
               }
-              if($column == "") $column = "status";
+              $query->where($column,$value);
+              break;
             case "type":
               if($column == "") $column = "type";
               if($value == "video" || $value == "animated_gif") $max = 20;
@@ -97,7 +98,13 @@ class PagesController extends Controller
           }
         }
       }
-      if($typeFlag) $query->where("status", '<>', -1)->orWhereNull('status');
+      if($typeFlag) {
+        // $query->where("status", '<>', -1);
+        // $query->orWhereNull('status');
+        $query->where(function ($query) {
+          $query->where("status", '<>', -1)->orWhereNull('status');
+        });
+      }
       $medias = $query->orderBy('saved_at', 'desc')->paginate($max);
       foreach($medias as $media){
         $media->path = '/twitter/' . $media->user_id_str . '/' . $media->filename;

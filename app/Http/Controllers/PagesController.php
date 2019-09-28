@@ -45,6 +45,7 @@ class PagesController extends Controller
 
     public function search(Request $requests){
       $request = $requests->all();
+      $max = 50;
       \Debugbar::addMessage($request);
       $query = Media::query();
       foreach ($request as $key => $value){
@@ -85,12 +86,13 @@ class PagesController extends Controller
               if($column == "") $column = "status";
             case "type":
               if($column == "") $column = "type";
+              if($value == "video" || $value == "animated_gif") $max = 20;
               $query->where($column,$value);
               break;
           }
         }
       }
-      $medias = $query->orderBy('saved_at', 'desc')->paginate(50);
+      $medias = $query->orderBy('saved_at', 'desc')->paginate($max);
       foreach($medias as $media){
         $media->path = '/twitter/' . $media->user_id_str . '/' . $media->filename;
       }

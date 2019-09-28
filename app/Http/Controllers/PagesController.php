@@ -20,7 +20,7 @@ class PagesController extends Controller
     public function getViewer(){
       $download_path = config('env.download_path');
       // $medias = Media::orderBy('saved_at', 'desc')->orderBy('tweet_id_str', 'desc')->orderBy('photo_number', 'asc')->take(50)->get();
-      $medias = Media::orderBy('saved_at', 'desc')->paginate(50);
+      $medias = Media::where("status", '<>', -1)->orWhereNull('status')->orderBy('saved_at', 'desc')->paginate(50);
       // $medias = Media::orderBy('saved_at', 'desc')->orderBy('tweet_id_str', 'desc')->orderBy('photo_number', 'asc')->where('type', '!=', "video")->take(50)->get();//->simplePaginate(1);
       // $medias = Media::where('favorite_count', '<', 10000)->orderBy('favorite_count', 'desc')->orderBy('tweet_id_str', 'desc')->orderBy('photo_number', 'asc')->skip(0)->take(50)->get();//->simplePaginate(1);
       // ->orderBy('filename', 'asc')
@@ -46,6 +46,7 @@ class PagesController extends Controller
     public function search(Request $requests){
       $request = $requests->all();
       $max = 50;
+      $typeFlag = 1;
       \Debugbar::addMessage($request);
       $query = Media::query();
       foreach ($request as $key => $value){
@@ -83,6 +84,10 @@ class PagesController extends Controller
               $query->where($column,'>=',$value);
               break;
             case "status":
+              if($column == "") {
+                $column = "status";
+                $typeFlag = 0;
+              }
               if($column == "") $column = "status";
             case "type":
               if($column == "") $column = "type";
@@ -92,6 +97,7 @@ class PagesController extends Controller
           }
         }
       }
+      if($typeFlag) $query->where("status", '<>', -1)->orWhereNull('status');
       $medias = $query->orderBy('saved_at', 'desc')->paginate($max);
       foreach($medias as $media){
         $media->path = '/twitter/' . $media->user_id_str . '/' . $media->filename;

@@ -99,8 +99,6 @@ class PagesController extends Controller
         }
       }
       if($typeFlag) {
-        // $query->where("status", '<>', -1);
-        // $query->orWhereNull('status');
         $query->where(function ($query) {
           $query->where("status", '<>', -1)->orWhereNull('status');
         });

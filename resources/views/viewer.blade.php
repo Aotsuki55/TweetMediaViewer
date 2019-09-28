@@ -80,65 +80,113 @@
       timeout: 10000,
     });
 
+    let selectAll = 0;
+
     $(window).keydown(function(e){
-      if(e.keyCode==49 || e.keyCode==50 || e.keyCode==51){
-        var $element;
-        var key = e.keyCode-48;
-        if(viewer!=null&&viewer.isShown){
-          $element = $('#viewer').get(0);
+      if(selectAll == 0){
+        if(e.keyCode==49 || e.keyCode==50 || e.keyCode==51){
+          var $element;
+          var key = e.keyCode-48;
+          if(viewer!=null&&viewer.isShown){
+            $element = $('#viewer').get(0);
+          }
+          else{
+            var $elements = $(":hover");
+            $element = $elements[$elements.length-1];
+          }
+          if($($element).prop('tagName')=="IMG"){
+            var id = $($element).data('id');
+            var index = $($element).data('idx');
+            var status = $($element).data('status');
+            var newStatus = status==key ? 0 : key;
+            var borderColor = (newStatus==null || newStatus==0) ? 'transparent' : statusToColor[newStatus];
+            $.ajax({
+              type: "POST",
+              url: "/view/status",
+              data: {
+                id: id,
+                status: newStatus,
+                _token: "{{ csrf_token() }}"
+              }
+            }).done(function (results) {
+              console.log("OK");
+              console.log("id:"+id+", status:"+newStatus+", index:"+(index==null?"null":index));
+              if(index!=null){
+                $(viewer.items[index].querySelector('img')).css('border-color', borderColor);
+                $($($($($($('#images').get(0)).children('li')).get(index)).children('img')).get(0)).css('border-color', borderColor);
+                // $(viewer.items[index].querySelector('img')).data('status', newStatus);
+                viewer.items[index].querySelector('img').setAttribute("data-status",newStatus);
+                $($($($($($('#images').get(0)).children('li')).get(index)).children('img')).get(0)).data('status', newStatus);
+              }
+              else if(viewer.initFlag==true){
+                index = $($($('#images').get(0)).children('li')).index($($($elements[$elements.length-2]).get(0)));
+                $(viewer.items[index].querySelector('img')).css('border-color', borderColor);
+                $($($($($($('#images').get(0)).children('li')).get(index)).children('img')).get(0)).css('border-color', borderColor);
+              }
+              $($element).data('status', newStatus);
+              $($element).css('border-color', borderColor);
+              return false;
+            }).fail(function (err) {
+              console.log("NG");
+              return false;
+            });
+          }
+          else{
+            return true;
+          }
         }
-        else{
-          var $elements = $(":hover");
-          $element = $elements[$elements.length-1];
+        else if(e.shiftKey && e.keyCode == 37){        
+          window.location.href = "{!! $medias->previousPageUrl() !!}";
+          return false;
         }
-        if($($element).prop('tagName')=="IMG"){
-          var id = $($element).data('id');
-          var index = $($element).data('idx');
-          var status = $($element).data('status');
-          var newStatus = status==key ? 0 : key;
-          var borderColor = (newStatus==null || newStatus==0) ? 'transparent' : statusToColor[newStatus];
-          $.ajax({
-            type: "POST",
-            url: "/view/status",
-            data: {
-              id: id,
-              status: newStatus,
-              _token: "{{ csrf_token() }}"
-            }
-          }).done(function (results) {
-            console.log("OK");
-            console.log("id:"+id+", status:"+newStatus+", index:"+(index==null?"null":index));
-            if(index!=null){
-              $(viewer.items[index].querySelector('img')).css('border-color', borderColor);
-              $($($($($($('#images').get(0)).children('li')).get(index)).children('img')).get(0)).css('border-color', borderColor);
-              // $(viewer.items[index].querySelector('img')).data('status', newStatus);
-              viewer.items[index].querySelector('img').setAttribute("data-status",newStatus);
-              $($($($($($('#images').get(0)).children('li')).get(index)).children('img')).get(0)).data('status', newStatus);
-            }
-            else if(viewer.initFlag==true){
-              index = $($($('#images').get(0)).children('li')).index($($($elements[$elements.length-2]).get(0)));
-              $(viewer.items[index].querySelector('img')).css('border-color', borderColor);
-              $($($($($($('#images').get(0)).children('li')).get(index)).children('img')).get(0)).css('border-color', borderColor);
-            }
-            $($element).data('status', newStatus);
-            $($element).css('border-color', borderColor);
-            return false;
-          }).fail(function (err) {
-            console.log("NG");
-            return false;
-          });
-        }
-        else{
-          return true;
+        else if(e.shiftKey && e.keyCode == 39){
+          window.location.href = "{!! $medias->nextPageUrl() !!}";
+          return false;
         }
       }
-      else if(e.shiftKey && e.keyCode == 37){        
-        window.location.href = "{!! $medias->previousPageUrl() !!}";
-        return false;
-      }
-      else if(e.shiftKey && e.keyCode == 39){
-        window.location.href = "{!! $medias->nextPageUrl() !!}";
-        return false;
+      else{
+        if(e.keyCode==48 || e.keyCode==49 || e.keyCode==50 || e.keyCode==51){
+          let newStatus = e.keyCode - 48;
+          for(let val of $($($('#images').get(0)).children('li'))){
+            let $element=$(val).children('img');
+            let id = $($element).data('id');
+            let index = $($element).data('idx');
+            let status = $($element).data('status');
+            if(status==null || status==0 || newStatus==0){
+              let borderColor = (newStatus==null || newStatus==0) ? 'transparent' : statusToColor[newStatus];
+              $.ajax({
+                type: "POST",
+                url: "/view/status",
+                data: {
+                  id: id,
+                  status: newStatus,
+                  _token: "{{ csrf_token() }}"
+                }
+              }).done(function (results) {
+                console.log("OK");
+                console.log("id:"+id+", status:"+newStatus+", index:"+(index==null?"null":index));
+                if(index!=null){
+                  $(viewer.items[index].querySelector('img')).css('border-color', borderColor);
+                  $($($($($($('#images').get(0)).children('li')).get(index)).children('img')).get(0)).css('border-color', borderColor);
+                  // $(viewer.items[index].querySelector('img')).data('status', newStatus);
+                  viewer.items[index].querySelector('img').setAttribute("data-status",newStatus);
+                  $($($($($($('#images').get(0)).children('li')).get(index)).children('img')).get(0)).data('status', newStatus);
+                }
+                else if(viewer.initFlag==true){
+                  index = $($($('#images').get(0)).children('li')).index($($($elements[$elements.length-2]).get(0)));
+                  $(viewer.items[index].querySelector('img')).css('border-color', borderColor);
+                  $($($($($($('#images').get(0)).children('li')).get(index)).children('img')).get(0)).css('border-color', borderColor);
+                }
+                $($element).data('status', newStatus);
+                $($element).css('border-color', borderColor);
+              }).fail(function (err) {
+                console.log("NG");
+              });
+            }
+          }
+          selectAll ^= 1;
+          $('#selectAll').button('toggle');
+        }
       }
     });
 
@@ -149,6 +197,10 @@
     });
     $('#trash').on('click', function() {
       window.location.href = '/view/find?_token='+"{{ csrf_token() }}"+'&userName=&screenName=&fabMin=&fabMax=&rtMin=&rtMax=&savedAtSince=&savedAtMax=&updatedAtSince=&updatedAtMax=&status=1&type=';
+    });
+    $('#selectAll').on('click', function() {
+      selectAll ^= 1;
+      $(this).button('toggle');
     });
     $('#allDelete').on('click', function() {
       for(let val of $($($('#images').get(0)).children('li'))){
@@ -184,10 +236,8 @@
             }
             $($element).data('status', newStatus);
             $($element).css('border-color', borderColor);
-            return false;
           }).fail(function (err) {
             console.log("NG");
-            return false;
           });
         }
       }

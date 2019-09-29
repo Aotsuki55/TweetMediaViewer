@@ -203,6 +203,12 @@
       $(this).button('toggle');
     });
     $('#allDelete').on('click', function() {
+      if(selectAll == 1){
+        selectAll = 0;
+        window.location.href = '/view/delete';
+      }
+    });
+    $('#delete').on('click', function() {
       for(let val of $($($('#images').get(0)).children('li'))){
         let $element=$(val).children('img');
         let id = $($element).data('id');

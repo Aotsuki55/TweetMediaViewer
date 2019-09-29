@@ -43,6 +43,13 @@ class PagesController extends Controller
       ,[]);
     }
 
+    public function delete(){
+      DB::update(
+        'update media set status = -1 where status = 1'
+      ,[]);
+      return $this->getViewer();
+    }
+
     public function search(Request $requests){
       $request = $requests->all();
       $max = 50;
@@ -92,7 +99,7 @@ class PagesController extends Controller
               break;
             case "type":
               if($column == "") $column = "type";
-              if($value == "video" || $value == "animated_gif") $max = 20;
+              if($value == "video" || $value == "animated_gif") $max = 10;
               $query->where($column,$value);
               break;
           }

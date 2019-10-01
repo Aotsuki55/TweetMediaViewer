@@ -1812,7 +1812,7 @@
       var url = getData(img, 'originalUrl');
       var id = getData(img, 'id');
       var idx = getData(img, 'idx');
-      var index = getData(img, 'index');
+      var index2 = getData(img, 'index');
       var status = getData(img, 'status');
       var alt = escapeHTMLEntities(img.getAttribute('alt'));
       var image = document.createElement('img');
@@ -1824,7 +1824,7 @@
       image.style.borderColor = img.style.borderColor;
       image.setAttribute('data-id', id);
       image.setAttribute('data-idx', idx);
-      image.setAttribute('data-index', index);
+      image.setAttribute('data-index', index2);
       image.setAttribute('data-status', status);
       if (isFunction(options.view)) {
         addListener(element, EVENT_VIEW, options.view, {

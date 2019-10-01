@@ -532,10 +532,6 @@ export function getImageNaturalSizes(image, callback) {
     callback(image.naturalWidth, image.naturalHeight);
     return newImage;
   }
-  if (image.videoWidth) {
-    callback(image.videoWidth, image.videoHeight);
-    return;
-  }
 
   const body = document.body || document.documentElement;
 

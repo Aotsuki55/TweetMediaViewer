@@ -11,7 +11,7 @@ Composer 1.7.3
 ```
 composer install
 cp .env.example .env
-php artisan key: generate
+php artisan key:generate
 ```
 .envを自身の環境にあわせて書き換え(DB関連とdownload_path(TwitterMediaDownloaderと同じもの))
 

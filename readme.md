@@ -13,14 +13,16 @@ composer install
 cp .env.example .env
 php artisan key:generate
 ```
-.envを自身の環境にあわせて書き換え(DB関連とdownload_path(TwitterMediaDownloaderと同じもの))
+.envを自身の環境にあわせて書き換え(DB関連)
 
 ## 使い方
 `php artisan serve`  
 
+ブラウザで`http://localhost:8000/view`を表示  
 
 画像を選択時もしくはカーソルが画像にのっている時に1〜3を押すと、画像にstatusを付与します  
 Select All &emsp;これを押した後に1〜3を押すと、ページ内のstatusが付与されていない全ての画像に一括でstatusを付与します  
+&emsp;&emsp;&emsp; &emsp; &emsp;これを押した後に0を押すと、ページ内の全ての画像のstatusを解除   
 Delete &emsp; &emsp;ページ内の全てのstatusが1の画像を削除します  
 All Delete &emsp;Select Allを押した後にこれを押すと、**全て**のstatusが1の画像を削除します  
 

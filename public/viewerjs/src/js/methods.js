@@ -12,6 +12,7 @@ import {
   EVENT_CLICK,
   EVENT_HIDE,
   EVENT_LOAD,
+  EVENT_LOADEDMETADATA,
   EVENT_SHOW,
   EVENT_TRANSITION_END,
   EVENT_VIEW,
@@ -217,10 +218,23 @@ export default {
     const img = item.querySelector('img');
     const url = getData(img, 'originalUrl');
     const alt = escapeHTMLEntities(img.getAttribute('alt'));
-    const image = document.createElement('img');
+    var image = null;
 
-    image.src = url;
-    image.alt = alt;
+    if (url.match(/\.mp4$/)) {
+      image = document.createElement('video');
+      image.controls = true;
+      image.autoplay = true;
+
+      const videoSource = document.createElement('source');
+      videoSource.src = url;
+      videoSource.type = 'video/mp4';
+      image.appendChild(videoSource)
+    } else {
+      image = document.createElement('img');
+
+      image.src = url;
+      image.alt = alt;
+    }
 
     if (isFunction(options.view)) {
       addListener(element, EVENT_VIEW, options.view, {
@@ -298,6 +312,9 @@ export default {
       this.load();
     } else {
       addListener(image, EVENT_LOAD, onLoad = this.load.bind(this), {
+        once: true,
+      });
+      addListener(image, EVENT_LOADEDMETADATA, proxy(this.load, this), {
         once: true,
       });
 

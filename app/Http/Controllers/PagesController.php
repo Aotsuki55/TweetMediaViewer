@@ -27,7 +27,18 @@ class PagesController extends Controller
       foreach($medias as $media){
         $media->path = '/twitter/' . $media->user_id_str . '/' . $media->filename;
       }
-      return view('viewer', [
+      $viewer = 'viewer';
+      $browser = strtolower($_SERVER['HTTP_USER_AGENT']);
+      if (strstr($browser , 'edge')) {
+      } elseif (strstr($browser , 'trident') || strstr($browser , 'msie')) {
+      } elseif (strstr($browser , 'chrome')) {
+      } elseif (strstr($browser , 'firefox')) {
+      } elseif (strstr($browser , 'safari')) {
+        $viewer.="Safari";
+      } elseif (strstr($browser , 'opera')) {
+      }
+
+      return view($viewer, [
         'medias' => $medias,
         'statusToColor' => PagesController::$statusToColor,
         'request' => null
@@ -115,7 +126,18 @@ class PagesController extends Controller
         $media->path = '/twitter/' . $media->user_id_str . '/' . $media->filename;
       }
       \Debugbar::addMessage($medias);
-      return view('viewer', [
+
+      $viewer = 'viewer';
+      $browser = strtolower($_SERVER['HTTP_USER_AGENT']);
+      if (strstr($browser , 'edge')) {
+      } elseif (strstr($browser , 'trident') || strstr($browser , 'msie')) {
+      } elseif (strstr($browser , 'chrome')) {
+      } elseif (strstr($browser , 'firefox')) {
+      } elseif (strstr($browser , 'safari')) {
+        $viewer.="Safari";
+      } elseif (strstr($browser , 'opera')) {
+      }
+      return view($viewer, [
         'medias' => $medias,
         'statusToColor' => PagesController::$statusToColor,
         'request' => $request

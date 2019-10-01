@@ -40,11 +40,7 @@
     <ul class="grid" id="images">
       @foreach($medias as $media)
         <li class="grid__item">
-          @if($media->type != "photo")
-            <video controls class="tweetImages" src="{{ asset( $media->path ) }}" alt="{{$media->filename}}" data-id="{{$media->media_id_str}}" data-status="{{$media->status}}" data-idx="{{$loop->index}}" width="300" height=auto style="border-style: solid; border-width: 4px ; border-color: {{ $media->status==null || $media->status==0 ? 'transparent' : $statusToColor[$media->status]}};">
-          @else
-            <img class="tweetImages" src="{{ asset( $media->path ) }}" alt="{{$media->filename}}" data-id="{{$media->media_id_str}}" data-status="{{$media->status}}" data-idx="{{$loop->index}}" width="300" height=auto style="border-style: solid; border-width: 4px ; border-color: {{ $media->status==null || $media->status==0 ? 'transparent' : $statusToColor[$media->status]}};">
-          @endif
+          <img class="tweetImages" src="{{ asset( $media->path ) }}" alt="{{$media->filename}}" data-id="{{$media->media_id_str}}" data-status="{{$media->status}}" data-idx="{{$loop->index}}" width="300" height=auto style="border-style: solid; border-width: 4px ; border-color: {{ $media->status==null || $media->status==0 ? 'transparent' : $statusToColor[$media->status]}};">
         </li>
       @endforeach
     </ul>
@@ -69,7 +65,7 @@
   var viewer = new Viewer(document.getElementById('images'), {
     navbar: 0,
     loop: false,
-    isSafari: false,
+    isSafari: true,
   });
 
   var statusToColor = {!!json_encode($statusToColor)!!};
@@ -98,9 +94,7 @@
             var $elements = $(":hover");
             $element = $elements[$elements.length-1];
           }
-          if($($element).prop('tagName')=="IMG"||$($element).prop('tagName')=="VIDEO"){
-            var type = "img";
-            if($($element).prop('tagName')=="VIDEO") type = "video";
+          if($($element).prop('tagName')=="IMG"){
             var id = $($element).data('id');
             var idx = $($element).data('idx');
             var index = $($element).data('index');
@@ -116,20 +110,20 @@
                 _token: "{{ csrf_token() }}"
               }
             }).done(function (results) {
+              console.log(idx);
               console.log("OK");
               console.log("id:"+id+", status:"+newStatus+", index:"+(index==null?"null":index));
-              if(index!=null){  //viewer is open
-                $(viewer.items[index].querySelector(type)).css('border-color', borderColor);
-                $($($($($($('#images').get(0)).children('li')).get(idx)).children(type)).get(0)).css('border-color', borderColor);
-                // $(viewer.items[index].querySelector(type)).data('status', newStatus);
-                viewer.items[index].querySelector(type).setAttribute("data-status",newStatus);
-                $($($($($($('#images').get(0)).children('li')).get(idx)).children(type)).get(0)).data('status', newStatus);
+              if(index!=null){
+                $(viewer.items[index].querySelector('img')).css('border-color', borderColor);
+                $($($($($($('#images').get(0)).children('li')).get(index)).children('img')).get(0)).css('border-color', borderColor);
+                // $(viewer.items[index].querySelector('img')).data('status', newStatus);
+                viewer.items[index].querySelector('img').setAttribute("data-status",newStatus);
+                $($($($($($('#images').get(0)).children('li')).get(index)).children('img')).get(0)).data('status', newStatus);
               }
-              // else if(viewer.initFlag==true){ //viewer has opened
-              //   index = $($($('#images').get(0)).children('li')).index($($($elements[$elements.length-2]).get(0)));
-              //   $(viewer.items[index].querySelector(type)).css('border-color', borderColor);
-              //   viewer.items[index].querySelector(type).setAttribute("data-status",newStatus);
-              // }
+              else if(viewer.initFlag==true){
+                $(viewer.items[idx].querySelector('img')).css('border-color', borderColor);
+                viewer.items[idx].querySelector('img').setAttribute("data-status",newStatus);
+              }
               $($element).data('status', newStatus);
               $($element).css('border-color', borderColor);
               return false;
@@ -155,15 +149,10 @@
         if(e.keyCode==48 || e.keyCode==49 || e.keyCode==50 || e.keyCode==51){
           let newStatus = e.keyCode - 48;
           for(let val of $($($('#images').get(0)).children('li'))){
-            let type = 'img';
             let $element=$(val).children('img');
-            if($element.length==0) {
-              $element=$(val).children('video');
-              type = 'video';
-            }
             let id = $($element).data('id');
             var idx = $($element).data('idx');
-            var index = $($element).data('index');
+            let index = $($element).data('index');
             let status = $($element).data('status');
             if(status==null || status==0 || newStatus==0){
               let borderColor = (newStatus==null || newStatus==0) ? 'transparent' : statusToColor[newStatus];
@@ -178,18 +167,17 @@
               }).done(function (results) {
                 console.log("OK");
                 console.log("id:"+id+", status:"+newStatus+", index:"+(index==null?"null":index));
-                if(index!=null){  //viewer is open
-                  $(viewer.items[index].querySelector(type)).css('border-color', borderColor);
-                  $($($($($($('#images').get(0)).children('li')).get(idx)).children(type)).get(0)).css('border-color', borderColor);
-                  // $(viewer.items[index].querySelector(type)).data('status', newStatus);
-                  viewer.items[index].querySelector(type).setAttribute("data-status",newStatus);
-                  $($($($($($('#images').get(0)).children('li')).get(idx)).children(type)).get(0)).data('status', newStatus);
+                if(index!=null){
+                  $(viewer.items[index].querySelector('img')).css('border-color', borderColor);
+                  $($($($($($('#images').get(0)).children('li')).get(index)).children('img')).get(0)).css('border-color', borderColor);
+                  // $(viewer.items[index].querySelector('img')).data('status', newStatus);
+                  viewer.items[index].querySelector('img').setAttribute("data-status",newStatus);
+                  $($($($($($('#images').get(0)).children('li')).get(index)).children('img')).get(0)).data('status', newStatus);
                 }
-                // else if(viewer.initFlag==true){ //viewer has opened
-                //   index = $($($('#images').get(0)).children('li')).index($($($elements[$elements.length-2]).get(0)));
-                //   $(viewer.items[index].querySelector(type)).css('border-color', borderColor);
-                //   viewer.items[index].querySelector(type).setAttribute("data-status",newStatus);
-                // }
+                else if(viewer.initFlag==true){
+                  $(viewer.items[idx].querySelector('img')).css('border-color', borderColor);
+                  viewer.items[idx].querySelector('img').setAttribute("data-status",newStatus);
+                }
                 $($element).data('status', newStatus);
                 $($element).css('border-color', borderColor);
               }).fail(function (err) {
@@ -201,18 +189,6 @@
           $('#selectAll').button('toggle');
         }
       }
-    });
-
-    $('.tweetImages').on('click', function(event){
-      if (event.metaKey){
-        var win = window.open($(this).attr('src'), 'sample2');
-        win.blur();
-        window.focus();         // 自画面からフォーカスを取得
-	      window.blur();          // 自画面からフォーカスを放す
-	      win.focus();     // サブウインドウにフォーカスを設定する
-        return false;
-      }
-      else return true;
     });
 
     $("#status").val("{{isset($request['status'])?$request['status']:null}}");

@@ -10,6 +10,7 @@ import {
   EVENT_CLICK,
   EVENT_DBLCLICK,
   EVENT_LOAD,
+  EVENT_LOADEDMETADATA,
   EVENT_VIEWED,
   IS_TOUCH_DEVICE,
 } from './constants';
@@ -458,6 +459,9 @@ export default {
 
       forEach(this.player.getElementsByTagName('img'), (image) => {
         addListener(image, EVENT_LOAD, this.loadImage.bind(this), {
+          once: true,
+        });
+        addListener(image, EVENT_LOADEDMETADATA, proxy(this.loadImage, this), {
           once: true,
         });
         dispatchEvent(image, EVENT_LOAD);

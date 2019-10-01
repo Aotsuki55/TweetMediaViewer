@@ -233,6 +233,8 @@
      */
     url: 'src',
 
+    isSafari: false,
+
     /**
      * Event shortcuts.
      * @type {Function}
@@ -924,7 +926,7 @@
     render: function render() {
       this.initContainer();
       this.initViewer();
-      if(this.initFlag==false)this.initList();
+      if(this.options.isSafari==false||this.initFlag==false)this.initList();
       this.renderViewer();
     },
     initContainer: function initContainer() {
@@ -970,6 +972,7 @@
         var url = options.url;
         var id = image.getAttribute("data-id");
         var status = image.getAttribute("data-status");
+        var idx = image.getAttribute("data-idx");
         var style = image.style.borderColor;
         if (isString(url)) {
           url = image.getAttribute(url);
@@ -987,6 +990,7 @@
           img.style.borderColor = style;
           img.setAttribute('data-id', id);
           img.setAttribute('data-status', status);
+          img.setAttribute('data-idx', idx);
           img.setAttribute('data-index', index);
           img.setAttribute('data-original-url', url || src);
           img.setAttribute('data-viewer-action', 'view');
@@ -1807,7 +1811,8 @@
       var img = item.querySelector('img');
       var url = getData(img, 'originalUrl');
       var id = getData(img, 'id');
-      var idx = getData(img, 'index');
+      var idx = getData(img, 'idx');
+      var index = getData(img, 'index');
       var status = getData(img, 'status');
       var alt = escapeHTMLEntities(img.getAttribute('alt'));
       var image = document.createElement('img');
@@ -1819,6 +1824,7 @@
       image.style.borderColor = img.style.borderColor;
       image.setAttribute('data-id', id);
       image.setAttribute('data-idx', idx);
+      image.setAttribute('data-index', index);
       image.setAttribute('data-status', status);
       if (isFunction(options.view)) {
         addListener(element, EVENT_VIEW, options.view, {

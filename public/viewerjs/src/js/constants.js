@@ -36,6 +36,7 @@ export const EVENT_HIDDEN = 'hidden';
 export const EVENT_HIDE = 'hide';
 export const EVENT_KEY_DOWN = 'keydown';
 export const EVENT_LOAD = 'load';
+export const EVENT_LOADEDMETADATA = 'loadedmetadata';
 export const EVENT_TOUCH_START = IS_TOUCH_DEVICE ? 'touchstart' : 'mousedown';
 export const EVENT_TOUCH_MOVE = IS_TOUCH_DEVICE ? 'touchmove' : 'mousemove';
 export const EVENT_TOUCH_END = IS_TOUCH_DEVICE ? 'touchend touchcancel' : 'mouseup';

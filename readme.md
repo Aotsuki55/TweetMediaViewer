@@ -18,6 +18,7 @@ php artisan key:generate
 ## 使い方
 `php artisan serve`  
 
+ブラウザで`http://localhost:8000/view`を表示  
 
 画像を選択時もしくはカーソルが画像にのっている時に1〜3を押すと、画像にstatusを付与します  
 Select All &emsp;これを押した後に1〜3を押すと、ページ内のstatusが付与されていない全ての画像に一括でstatusを付与します  

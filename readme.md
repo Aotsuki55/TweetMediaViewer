@@ -13,7 +13,7 @@ composer install
 cp .env.example .env
 php artisan key:generate
 ```
-.envを自身の環境にあわせて書き換え(DB関連とdownload_path(TwitterMediaDownloaderと同じもの))
+.envを自身の環境にあわせて書き換え(DB関連)
 
 ## 使い方
 `php artisan serve`  

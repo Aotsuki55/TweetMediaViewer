@@ -18,12 +18,7 @@ class PagesController extends Controller
     );
 
     public function getViewer(){
-      $download_path = config('env.download_path');
-      // $medias = Media::orderBy('saved_at', 'desc')->orderBy('tweet_id_str', 'desc')->orderBy('photo_number', 'asc')->take(50)->get();
       $medias = Media::where("status", '<>', -1)->orWhereNull('status')->orderBy('saved_at', 'desc')->paginate(50);
-      // $medias = Media::orderBy('saved_at', 'desc')->orderBy('tweet_id_str', 'desc')->orderBy('photo_number', 'asc')->where('type', '!=', "video")->take(50)->get();//->simplePaginate(1);
-      // $medias = Media::where('favorite_count', '<', 10000)->orderBy('favorite_count', 'desc')->orderBy('tweet_id_str', 'desc')->orderBy('photo_number', 'asc')->skip(0)->take(50)->get();//->simplePaginate(1);
-      // ->orderBy('filename', 'asc')
       foreach($medias as $media){
         $media->path = '/twitter/' . $media->user_id_str . '/' . $media->filename;
       }
@@ -125,7 +120,6 @@ class PagesController extends Controller
       foreach($medias as $media){
         $media->path = '/twitter/' . $media->user_id_str . '/' . $media->filename;
       }
-      \Debugbar::addMessage($medias);
 
       $viewer = 'viewer';
       $browser = strtolower($_SERVER['HTTP_USER_AGENT']);

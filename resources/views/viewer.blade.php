@@ -41,7 +41,7 @@
       @foreach($medias as $media)
         <li class="grid__item">
           @if($media->type != "photo")
-            <video controls class="tweetImages" src="{{ asset( $media->path ) }}" alt="{{$media->filename}}" data-id="{{$media->media_id_str}}" data-status="{{$media->status}}" data-idx="{{$loop->index}}" width="300" height=auto style="border-style: solid; border-width: 4px ; border-color: {{ $media->status==null || $media->status==0 ? 'transparent' : $statusToColor[$media->status]}};">
+            <video controls preload="metadata" class="tweetImages tweetVideo" src="{{ asset( $media->path ) }}" alt="{{$media->filename}}" data-id="{{$media->media_id_str}}" data-status="{{$media->status}}" data-idx="{{$loop->index}}" width="300" height=auto style="border-style: solid; border-width: 4px ; border-color: {{ $media->status==null || $media->status==0 ? 'transparent' : $statusToColor[$media->status]}};">
           @else
             <img class="tweetImages" src="{{ asset( $media->path ) }}" alt="{{$media->filename}}" data-id="{{$media->media_id_str}}" data-status="{{$media->status}}" data-idx="{{$loop->index}}" width="300" height=auto style="border-style: solid; border-width: 4px ; border-color: {{ $media->status==null || $media->status==0 ? 'transparent' : $statusToColor[$media->status]}};">
           @endif

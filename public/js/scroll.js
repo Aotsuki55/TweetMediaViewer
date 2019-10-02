@@ -38,6 +38,15 @@ $(function(){
           isResizable: true            // リサイズ時に並び替えるかどうか
       });
   });
+
+  $('.tweetVideo').on('loadedmetadata', function(){
+    $grid.masonry({
+          itemSelector: '.grid__item',    // Masonryで並び替える要素
+          isAnimated: true,            // アニメーションにするかどうか
+          isFitWidth: true,            // 横幅に自動的に合わせるかどうか
+          isResizable: true            // リサイズ時に並び替えるかどうか
+      });
+  });
       
   // $grid.infinitescroll({
   //   path: '.pagination a[rel=next]',

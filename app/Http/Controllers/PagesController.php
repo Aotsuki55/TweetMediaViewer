@@ -17,21 +17,34 @@ class PagesController extends Controller
       "-1" => '#000000',
     );
 
+    private static function getBrowser(){
+      $browser = strtolower($_SERVER['HTTP_USER_AGENT']);
+      if (strstr($browser , 'edge')) {
+        $browser = 'edge';
+      } elseif (strstr($browser , 'trident') || strstr($browser , 'msie')) {
+        $browser = 'IE';
+      } elseif (strstr($browser , 'chrome')) {
+        $browser = 'chrome';
+      } elseif (strstr($browser , 'firefox')) {
+        $browser = 'firefox';
+      } elseif (strstr($browser , 'safari')) {
+        $browser = 'safari';
+      } elseif (strstr($browser , 'opera')) {
+        $browser = 'opera';
+      } else{
+        $browser = 'none';
+      }
+      return $browser;
+    }
+
     public function getViewer(){
       $medias = Media::where("status", '<>', -1)->orWhereNull('status')->orderBy('saved_at', 'desc')->paginate(50);
       foreach($medias as $media){
         $media->path = '/twitter/' . $media->user_id_str . '/' . $media->filename;
       }
       $viewer = 'viewer';
-      $browser = strtolower($_SERVER['HTTP_USER_AGENT']);
-      if (strstr($browser , 'edge')) {
-      } elseif (strstr($browser , 'trident') || strstr($browser , 'msie')) {
-      } elseif (strstr($browser , 'chrome')) {
-      } elseif (strstr($browser , 'firefox')) {
-      } elseif (strstr($browser , 'safari')) {
-        $viewer.="Safari";
-      } elseif (strstr($browser , 'opera')) {
-      }
+      $browser = PagesController::getBrowser();
+      if($browser=='safari') $viewer.="Safari";
 
       return view($viewer, [
         'medias' => $medias,
@@ -57,6 +70,9 @@ class PagesController extends Controller
     }
 
     public function search(Request $requests){
+      $viewer = 'viewer';
+      $browser = PagesController::getBrowser();
+      if($browser=='safari') $viewer.="Safari";
       $request = $requests->all();
       $max = 50;
       $typeFlag = 1;
@@ -105,7 +121,10 @@ class PagesController extends Controller
               break;
             case "type":
               if($column == "") $column = "type";
-              if($value == "video" || $value == "animated_gif") $max = 10;
+              if($value == "video" || $value == "animated_gif") {
+                if($browser=='safari') $max = 10;
+                else $max = 30;
+              }
               $query->where($column,$value);
               break;
           }
@@ -121,16 +140,6 @@ class PagesController extends Controller
         $media->path = '/twitter/' . $media->user_id_str . '/' . $media->filename;
       }
 
-      $viewer = 'viewer';
-      $browser = strtolower($_SERVER['HTTP_USER_AGENT']);
-      if (strstr($browser , 'edge')) {
-      } elseif (strstr($browser , 'trident') || strstr($browser , 'msie')) {
-      } elseif (strstr($browser , 'chrome')) {
-      } elseif (strstr($browser , 'firefox')) {
-      } elseif (strstr($browser , 'safari')) {
-        $viewer.="Safari";
-      } elseif (strstr($browser , 'opera')) {
-      }
       return view($viewer, [
         'medias' => $medias,
         'statusToColor' => PagesController::$statusToColor,

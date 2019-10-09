@@ -6,7 +6,7 @@
 ## 動作環境
 Laravel Framework 5.5.48  
 Composer 1.7.3  
-ブラウザ(FireFox推奨*)
+ブラウザ (FireFox推奨*)
 
 ## 初期設定 
 ```
@@ -30,9 +30,9 @@ All Delete &emsp;Select Allを押した後にこれを押すと、**全て**のs
 Shift + → (Shift + ←)でページを進む(戻る)ことが出来ます
 
 ## \*ブラウザ
-FireFox推奨(決してキツネがかわいいからではない)  
+FireFox推奨 (決してキツネがかわいいからではない)  
 
-ブラウザによって以下のような特徴があります  
+ブラウザによって動画再生機能に以下のような特徴があります(画像は全て同じ)  
 FireFox &emsp; プレイヤー表示、シーク可能  
 Chrome &emsp;プレイヤー表示、シーク不可  
 Safari &emsp;&emsp;シーク不可、重い  

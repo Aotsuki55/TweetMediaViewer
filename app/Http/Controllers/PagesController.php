@@ -38,9 +38,16 @@ class PagesController extends Controller
     }
 
     public function getViewer(){
+      if(session('authCredentials',null)==null) return redirect('/connection');
       $medias = Media::where("status", '<>', -1)->orWhereNull('status')->orderBy('saved_at', 'desc')->paginate(50);
+      $photoIDs = array();
       foreach($medias as $media){
-        $media->path = '/twitter/' . $media->user_id_str . '/' . $media->filename;
+        if($media->google_photo_id) $photoIDs[] = $media->google_photo_id;
+      }
+      if(count($photoIDs)) $photoURLs = GooglePhoto::getPhotoURL($photoIDs);
+      foreach($medias as $media){
+        if($media->google_photo_id) $media->path = $photoURLs[$media->google_photo_id];
+        else $media->path = '/twitter/' . $media->user_id_str . '/' . $media->filename;
       }
       $viewer = 'viewer';
       $browser = PagesController::getBrowser();
@@ -136,8 +143,14 @@ class PagesController extends Controller
         });
       }
       $medias = $query->orderBy('saved_at', 'desc')->paginate($max);
+      $photoIDs = array();
       foreach($medias as $media){
-        $media->path = '/twitter/' . $media->user_id_str . '/' . $media->filename;
+        if($media->google_photo_id) $photoIDs[] = $media->google_photo_id;
+      }
+      if(count($photoIDs)) $photoURLs = GooglePhoto::getPhotoURL($photoIDs);
+      foreach($medias as $media){
+        if($media->google_photo_id) $media->path = $photoURLs[$media->google_photo_id];
+        else $media->path = '/twitter/' . $media->user_id_str . '/' . $media->filename;
       }
 
       return view($viewer, [

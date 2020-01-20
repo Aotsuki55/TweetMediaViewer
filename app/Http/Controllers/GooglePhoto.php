@@ -20,14 +20,11 @@ class GooglePhoto extends Controller
     
     public function getConnection(Request $request){
         // \Debugbar::info("mediaItem");
-        info('1');
-        if(!$request->session()->has('authCredentials')){
+        if(!$request->session()->has('authCredentials')||!Cache::has('refreshToken')){
             if(!Cache::has('refreshToken')) {
-                info('2');
                 return GooglePhoto::connectWithGooglePhotos($request);
             }
             else{
-                info('3');
                 $clientId = Config::get('google.client_id');
                 $clientSecret = Config::get('google.client_secret');
                 $refreshToken = Cache::get('refreshToken');
@@ -63,15 +60,27 @@ class GooglePhoto extends Controller
         ]);
         // The authorization URI will, upon redirecting, return a parameter called code.
         if (!$request->input('code',null)) {
-            $authenticationUrl = $oauth2->buildFullAuthorizationUri(['access_type' => 'offline']);
+            $authenticationUrl = $oauth2->buildFullAuthorizationUri(['access_type' => 'offline','prompt'=>'consent']);
             return redirect()->away($authenticationUrl);
         } else {
-            // With the code returned by the OAuth flow, we can retrieve the refresh token.
+            // With the code returned by the OAuth flow, we can retrieve thefresh token.
             $oauth2->setCode($request->input('code'));
             $authToken = $oauth2->fetchAuthToken();
-            $refreshToken = $authToken['refresh_token'];
-            Cache::forever('refreshToken', $refreshToken);
             info($authToken);
+            if(isset($authToken['refresh_token'])){
+                $refreshToken = $authToken['refresh_token'];
+                Cache::forever('refreshToken', $refreshToken);
+            }
+            else $refreshToken = $authToken['access_token'];
+            $authCredentials = new UserRefreshCredentials(
+                GooglePhoto::$scopes,
+                [
+                    'client_id' => $clientId,
+                    'client_secret' => $clientSecret,
+                    'refresh_token' => $refreshToken
+                ]
+            );
+            $request->session()->put('authCredentials', $authCredentials);
             return redirect('/view');
         }
     }

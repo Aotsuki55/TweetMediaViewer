@@ -218,10 +218,10 @@
     $("#status").val("{{isset($request['status'])?$request['status']:null}}");
     $("#type").val("{{isset($request['type'])?$request['type']:null}}");
     $('#reset').on('click', function() {
-      window.location.href = '/view';
+      window.location.href = "{{url('/view')}}";
     });
     $('#trash').on('click', function() {
-      window.location.href = '/view/find?_token='+"{{ csrf_token() }}"+'&userName=&screenName=&fabMin=&fabMax=&rtMin=&rtMax=&savedAtSince=&savedAtMax=&updatedAtSince=&updatedAtMax=&status=1&type=';
+      window.location.href = "{{url('/view/find?_token=')}}"+"{{ csrf_token() }}"+'&userName=&screenName=&fabMin=&fabMax=&rtMin=&rtMax=&savedAtSince=&savedAtMax=&updatedAtSince=&updatedAtMax=&status=1&type=';
     });
     $('#selectAll').on('click', function() {
       selectAll ^= 1;
@@ -230,7 +230,7 @@
     $('#allDelete').on('click', function() {
       if(selectAll == 1){
         selectAll = 0;
-        window.location.href = '/view/delete';
+        window.location.href = "{{url('/view/delete')}}";
       }
     });
     $('#delete').on('click', function() {

@@ -20,3 +20,7 @@ Route::post('/view/status', 'PagesController@saveTmp');
 Route::get('/view/find', 'PagesController@search');
 Route::get('/view/delete', 'PagesController@delete');
 Route::get('/connection', 'GooglePhoto@getConnection');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

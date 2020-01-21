@@ -51,6 +51,9 @@
     <div class="text-center">
       {{ $medias->appends(request()->query())->links() }}
     </div>
+    @guest
+      <p style="text-align: right">guest </p>
+    @endguest
   <!-- </div> -->
 </body>
 

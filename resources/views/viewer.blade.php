@@ -112,7 +112,7 @@
             var borderColor = (newStatus==null || newStatus==0) ? 'transparent' : statusToColor[newStatus];
             $.ajax({
               type: "POST",
-              url: "/view/status",
+              url: "{{url('/view/status')}}",
               data: {
                 id: id,
                 status: newStatus,
@@ -172,7 +172,7 @@
               let borderColor = (newStatus==null || newStatus==0) ? 'transparent' : statusToColor[newStatus];
               $.ajax({
                 type: "POST",
-                url: "/view/status",
+                url: "{{url('/view/status')}}",
                 data: {
                   id: id,
                   status: newStatus,
@@ -247,7 +247,7 @@
           let borderColor = (newStatus==null || newStatus==0) ? 'transparent' : statusToColor[newStatus];
           $.ajax({
             type: "POST",
-            url: "/view/status",
+            url: "{{url('/view/status')}}",
             data: {
               id: id,
               status: newStatus,

@@ -128,7 +128,7 @@ class PagesControllerApi extends Controller
       foreach($medias as $media){
         if($media->google_photo_id) $photoIDs[] = $media->google_photo_id;
       }
-      if(count($photoIDs)) $photoURLs = GooglePhoto::getPhotoURL($photoIDs);
+      if(count($photoIDs)) $photoURLs = GooglePhoto::getPhotoURL(array_unique($photoIDs));
       foreach($medias as $media){
         if($media->google_photo_id && isset($photoURLs[$media->google_photo_id])) $media->path = $photoURLs[$media->google_photo_id];
         else $media->path = "";

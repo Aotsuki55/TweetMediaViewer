@@ -91,7 +91,7 @@ class PagesController extends Controller
       \Debugbar::addMessage($request);
       $query = Media::query();
       foreach ($request as $key => $value){
-        if($value!=null){
+        if($value!=null&&$value!=""){
           $column = "";
           switch($key){
             case "userName":
@@ -122,7 +122,7 @@ class PagesController extends Controller
               if($column == "") $column = "saved_at";
             case "updatedAtMax":
               if($column == "") $column = "updated_at";
-              $query->where($column,'>=',$value);
+              $query->where($column,'<=',$value);
               break;
             case "status":
               if($column == "") {

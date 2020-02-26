@@ -61,6 +61,7 @@ class PagesControllerApi extends Controller
     }
 
     public function search(Request $requests){
+      if(session('authCredentials',null)==null) return redirect('/api/connection');
       $request = $requests->all();
       $max = 50;
       $typeFlag = 1;
